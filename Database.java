@@ -11,7 +11,22 @@ class dueChecker implements Runnable {
 
     @Override
     public void run() {
-        while(true) {
+        while(true){
+            Date d = new Date();
+            String day = d.toString().substring(0,10);
+            for (;;) {
+                try{
+                    Thread.sleep(600000);
+                    Date date=new Date();
+                    String currentDay=date.toString().substring(0,10);
+                    if(!day.equals(currentDay)){
+                        break;
+                    }
+                } catch(Exception e){
+                    System.out.println(e.getMessage());
+                }
+                d = new Date();
+            }
             HashSet<Student> hs= Database.getStudentDatabase();
             LocalDate currDate = LocalDate.now();
 
@@ -136,6 +151,8 @@ public class Database {
     }
 
     public static void main(String[] args) {
+        //Testing
+
         Student s = new Student("rad", "rad", "rad");
         addStudent(s);
         System.out.println();
