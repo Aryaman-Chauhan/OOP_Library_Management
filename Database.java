@@ -14,20 +14,22 @@ class dueChecker implements Runnable {
         while(true){
             Date d = new Date();
             String day = d.toString().substring(0,10);
+
             for (;;) {
                 try{
                     Thread.sleep(600000);
-                    Date date=new Date();
-                    String currentDay=date.toString().substring(0,10);
-                    if(!day.equals(currentDay)){
-                        break;
-                    }
                 } catch(Exception e){
                     System.out.println(e.getMessage());
                 }
+                Date date = new Date();
+                String currentDay = date.toString().substring(0,10);
+                if(!day.equals(currentDay)){
+                    break;
+                }
                 d = new Date();
             }
-            HashSet<Student> hs= Database.getStudentDatabase();
+//            System.out.println("Broken");
+            HashSet<Student> hs = Database.getStudentDatabase();
             LocalDate currDate = LocalDate.now();
 
             for (Student s : hs) {
@@ -49,8 +51,6 @@ public class Database {
     private static HashSet<Student> studentDatabase = new HashSet<>();
     private static HashSet<Book> bookList = new HashSet<>();
     private static HashSet<Librarian> adminList = new HashSet<>();
-
-    dueChecker dc = new dueChecker();
 
     public static HashSet<Student> getStudentDatabase() {
         return studentDatabase;
@@ -152,7 +152,7 @@ public class Database {
 
     public static void main(String[] args) {
         //Testing
-
+        dueChecker dc = new dueChecker();
         Student s = new Student("rad", "rad", "rad");
         addStudent(s);
         System.out.println();
