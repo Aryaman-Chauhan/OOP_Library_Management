@@ -5,11 +5,21 @@ public class Librarian extends User {
         this.password = "admin";
     }
 
-    public void changeBookName(Book b, String newName){
-        b.setName(newName);
+    public void changeBookName(String bookName, String newName){
+        try{
+            Database.changeBookName(this, bookName, newName);
+        }
+        catch (BookNotFoundException e){
+            System.out.println(e.getMessage());
+        }
     }
 
-    public void changeBookAuthor(Book b, String newName){
-        b.setAuthor(newName);
+    public void changeBookAuthor(String bookName, String newName){
+        try{
+            Database.changeBookAuthor(this, bookName, newName);
+        }
+        catch (BookNotFoundException e){
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -141,7 +141,7 @@ public class Database {
             throw new BookNotFoundException(bookName);
         }
 
-        admin.changeBookName(retBook, newName);
+        retBook.setName(newName);
     }
 
     public static void changeBookAuthor(Librarian admin, String bookName, String newName) throws BookNotFoundException{
@@ -158,7 +158,7 @@ public class Database {
             throw new BookNotFoundException(bookName);
         }
 
-        admin.changeBookAuthor(retBook, newName);
+        retBook.setAuthor(newName);
     }
 
     public static int returnBook(Student s, String name) {
