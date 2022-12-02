@@ -97,9 +97,8 @@ public class Database {
         }
     }
 
-    public static int issueBook(Student s, String name) {
+    public static void issueBook(Student s, String name) throws MaxBookLimitException, BookNotFoundException, BookNotAvailableException{
         Book retBook = null;
-        int a = 0;
 
         for (Book b : bookList) {
             if (b.getName().equalsIgnoreCase(name) && b.isAvailable()) {
@@ -107,7 +106,7 @@ public class Database {
                 b.setAvailable(false);
             }
             else if (b.getName().equalsIgnoreCase(name) && !b.isAvailable()) {
-                a = 2;
+                throw new BookNotAvailableException(name);
             }
         }
 
@@ -118,14 +117,48 @@ public class Database {
             }
 
             if (tm.size() > 3) {
-                return 3;
+                //return 3;
+                throw new MaxBookLimitException();
             }
 
             tm.put(retBook, LocalDate.now().plusDays(15));
             s.setCurrBooks(tm);
-            a = 1;
         }
-        return a;
+        throw new BookNotFoundException(name);
+    }
+
+    public static void changeBookName(Librarian admin, String bookName, String newName) throws BookNotFoundException{
+        Book retBook = null;
+
+        for (Book b : bookList) {
+            if (b.getName().equalsIgnoreCase(bookName)) {
+                retBook = b;
+                break;
+            }
+        }
+
+        if(retBook==null){
+            throw new BookNotFoundException(bookName);
+        }
+
+        admin.changeBookName(retBook, newName);
+    }
+
+    public static void changeBookAuthor(Librarian admin, String bookName, String newName) throws BookNotFoundException{
+        Book retBook = null;
+
+        for (Book b : bookList) {
+            if (b.getName().equalsIgnoreCase(bookName)) {
+                retBook = b;
+                break;
+            }
+        }
+
+        if(retBook==null){
+            throw new BookNotFoundException(bookName);
+        }
+
+        admin.changeBookAuthor(retBook, newName);
     }
 
     public static int returnBook(Student s, String name) {

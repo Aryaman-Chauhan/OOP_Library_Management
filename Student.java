@@ -44,21 +44,20 @@ public class Student extends User {
         return "Name: " + name;
     }
 
-    public void borrowBook(String name) {
-        int a = Database.issueBook(this, name);
-
-        if (a == 0) {
-            System.out.println(name + " not found!");
-        }
-        else if (a == 1){
+    public void borrowBook(String name){
+        try{
+            Database.issueBook(this, name);
             System.out.println(name + " borrowed! Due on " + LocalDate.now().plusDays(15).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         }
-        else if (a == 2){
-            System.out.println(name + " already borrowed by some user!");
+        catch(MaxBookLimitException e) {
+            //System.out.println("Max limit reached! Return a book to borrow another book");
+            System.out.println(e.getMessage());
         }
-
-        else if (a == 3) {
-            System.out.println("Max limit reached! Return a book to borrow another book");
+        catch (BookNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+         catch (BookNotAvailableException e) {
+            System.out.println(e.getMessage());
         }
     }
 
