@@ -1,10 +1,12 @@
 public class Librarian extends User {
 
     Librarian() {
-        this.id = "admin";
+        this.id = "FXXXXXXXXXXXX";
         this.password = "admin";
     }
-
+    void setFine(double fine){
+        this.fine = fine;
+    }
     public void changeBookName(String bookName, String newName){
         try{
             Database.changeBookName(this, bookName, newName);

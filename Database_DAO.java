@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Database_DAO {
     Connection con = null;
@@ -90,7 +91,7 @@ public class Database_DAO {
         }
     }
 
-    public int issueBook(int idno, String bookname) throws SQLException {
+    public int issueBookDB(int idno, String bookname) throws SQLException {
         String query = "UPDATE book SET bookissue=?,duedate=adddate(current_date(),15) WHERE bname=?";
         pst = con.prepareStatement(query);
         pst.setInt(1,idno);
@@ -103,7 +104,7 @@ public class Database_DAO {
         }
     }
 
-    public int returnBook(int idno, String bookname) throws SQLException {
+    public int returnBookDB(int idno, String bookname) throws SQLException {
         String query = "UPDATE book set bookissue=1,duedate=NULL where bname=? AND bookissue=?";
         pst = con.prepareStatement(query);
         pst.setString(1,bookname);
@@ -135,6 +136,29 @@ public class Database_DAO {
         pst = con.prepareStatement(query);
         return pst.executeQuery();
     }
+
+    public double dueTotal(Student std)throws SQLException{
+        ResultSet rs = this.signIn(std);
+        double dues = 0.;
+        int idno;
+        if(rs.isBeforeFirst()) {
+            rs.next();
+            idno = rs.getInt(1);
+            ResultSet bookset = this.getUserBooks(idno);
+            while(bookset.next()){
+                java.sql.Date sqlDate = bookset.getDate(2);
+                LocalDate ld = sqlDate.toLocalDate();
+                LocalDate cd = LocalDate.now();
+                int d = cd.compareTo(ld);
+                if(d>0) {
+                    Period period = Period.between(ld,cd);
+                    d = period.getDays();
+                    dues += d * std.fine;
+                }
+            }
+        }
+        return dues;
+    }
     public void closeCon() throws SQLException {
         con.close();
         try {
@@ -142,34 +166,35 @@ public class Database_DAO {
         }catch (NullPointerException ignored){  }
     }
 }
-class Test{
-    public static void main(String[] args) throws Exception {
-        Database_DAO dao = new Database_DAO();
-        dao.connect();
-//        Student std = new Student("aryaman","FYYY","12345");//Add student completed
-//                                                            // with all possible case checks
-//        System.out.println(dao.addStudentToDB(std));
-//        System.out.println(dao.deleteStudentFromDB("FYYY"));//Deletion working passed
-//        System.out.println(dao.issueBook(3,"Mein Kamf"));//Issue working perfectly
-//        ResultSet rs = dao.getUserBooks(3);
-//        int i = 1;
-//        while(rs.next()){
-//            System.out.println(i+":"+rs.getString(1));
-//            System.out.println("Due Date:"+rs.getDate(2));
-//            i++;
-//        }
-//        System.out.println(rs.isAfterLast());//If this is true, then we had a successful list,
-//                                            // else no books due
-//        Book book = new Book("Hey","test","aloo","","");//Book addition test passed
-//        System.out.println(dao.addBook(book));
-//        System.out.println(dao.deleteBook("aloo"));//Book deletion test passed
-//        System.out.println(dao.returnBook(3,"Mein Kampf"));//Return book class passed
-//        ResultSet rs = dao.bookDetails("Mein Kampf");//Get details working passed
-//        System.out.println(rs.isBeforeFirst());//Important to differentiate b/w empty and full ResulSet
-//        rs.next();
-//        System.out.println("Name: "+rs.getString(1)+"\nAuthor: "+rs.getString(2)+"\nISBN: "+rs.getString(3)+"\nGenre: "+
-//        rs.getString(4)+"\nPublisher: "+rs.getString(5)+" ");
-
-        dao.closeCon();
-    }
-}
+//class Test{
+//    public static void main(String[] args) throws Exception {
+//        Database_DAO dao = new Database_DAO();
+//        dao.connect();
+////        Student std = new Student("aryaman","FYYY","12345");//Add student completed
+////                                                            // with all possible case checks
+////        System.out.println(dao.addStudentToDB(std));
+////        System.out.println(dao.deleteStudentFromDB("FYYY"));//Deletion working passed
+////        System.out.println(dao.issueBook(3,"Mein Kamf"));//Issue working perfectly
+////        ResultSet rs = dao.getUserBooks(3);
+////        int i = 1;
+////        while(rs.next()){
+////            System.out.println(i+":"+rs.getString(1));
+////            System.out.println("Due Date:"+rs.getDate(2));
+////            i++;
+////        }
+////        System.out.println(rs.isAfterLast());//If this is true, then we had a successful list,
+////                                            // else no books due
+////        Book book = new Book("Hey","test","aloo","","");//Book addition test passed
+////        System.out.println(dao.addBook(book));
+////        System.out.println(dao.deleteBook("aloo"));//Book deletion test passed
+////        System.out.println(dao.returnBook(3,"Mein Kampf"));//Return book class passed
+////        ResultSet rs = dao.bookDetails("Mein Kampf");//Get details working passed
+////        System.out.println(rs.isBeforeFirst());//Important to differentiate b/w empty and full ResulSet
+////        rs.next();
+////        System.out.println("Name: "+rs.getString(1)+"\nAuthor: "+rs.getString(2)+"\nISBN: "+rs.getString(3)+"\nGenre: "+
+////        rs.getString(4)+"\nPublisher: "+rs.getString(5)+" ");
+////        System.out.println(dao.dueTotal(new Student("Aryaman Chauhan","F2020B5A72006P","12345")));//Due calculation passed
+////        dao.returnBookDB(3,"Digital Design");
+//        dao.closeCon();
+//    }
+//}

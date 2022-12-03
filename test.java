@@ -1,8 +1,3 @@
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.DuplicateFormatFlagsException;
-
 public class test {
     public static void main(String[] args) {
         dueChecker dc = new dueChecker();
@@ -10,11 +5,11 @@ public class test {
         Database.addStudent(s);
         System.out.println();
 
-        Database.addBook(new Book("Atomic Habits", "James Clear"));
+        Database.addBook(new Book("Atomic Habits", "James Clear", "", "", ""));
         System.out.println();
-        Database.addBook(new Book("Ikigai", "Hector Garcia"));
+        Database.addBook(new Book("Ikigai", "Hector Garcia", "", "", ""));
         System.out.println();
-        Database.addBook(new Book("War of Lanka", "Amish Tripathi"));
+        Database.addBook(new Book("War of Lanka", "Amish Tripathi", "", "", ""));
         System.out.println();
 
         s.borrowBook("Atomic habits");
