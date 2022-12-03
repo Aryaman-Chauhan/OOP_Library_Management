@@ -49,14 +49,7 @@ public class Student extends User {
             Database.issueBook(this, name);
             System.out.println(name + " borrowed! Due on " + LocalDate.now().plusDays(15).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         }
-        catch(MaxBookLimitException e) {
-            //System.out.println("Max limit reached! Return a book to borrow another book");
-            System.out.println(e.getMessage());
-        }
-        catch (BookNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-         catch (BookNotAvailableException e) {
+        catch(MaxBookLimitException | BookNotFoundException | BookNotAvailableException e) {
             System.out.println(e.getMessage());
         }
     }
