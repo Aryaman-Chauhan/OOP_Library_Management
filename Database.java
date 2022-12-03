@@ -124,7 +124,9 @@ public class Database {
             tm.put(retBook, LocalDate.now().plusDays(15));
             s.setCurrBooks(tm);
         }
-        throw new BookNotFoundException(name);
+        else {
+            throw new BookNotFoundException(name);
+        }
     }
 
     public static void changeBookName(Librarian admin, String bookName, String newName) throws BookNotFoundException{
