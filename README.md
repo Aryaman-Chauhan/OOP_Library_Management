@@ -50,4 +50,7 @@ The following functionalities have been implemented for Librarian:
 + Add/Remove Books
 + Set Fine(Default set to Rs 1.0/day delay)
 
-This porject uses MySQL database which is implemented in the Database_DAO.java, which requires a .jar file (https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.30/mysql-connector-java-8.0.30.jar), which needs to be imported in order for MySQL Driver to work.
+This project uses MySQL database which is implemented in the Database_DAO.java, which requires a [.jar file](https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.30/mysql-connector-java-8.0.30.jar), which needs to be imported in order for MySQL Driver to work.
+
+### Multithreading
+
