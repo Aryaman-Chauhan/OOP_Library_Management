@@ -11,7 +11,7 @@ public class Student extends User {
         this.name = name;
         this.id = id;
         super.setPassword(password);
-        currBooks = null;
+        currBooks = new TreeMap<>();
         dues = 0;
     }
 
@@ -45,12 +45,16 @@ public class Student extends User {
     }
 
     public void borrowBook(String name){
+        int a = currBooks.size();
+
         try{
             Database.issueBook(this, name);
-            System.out.println(name + " borrowed! Due on " + LocalDate.now().plusDays(15).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         }
-        catch(MaxBookLimitException | BookNotFoundException | BookNotAvailableException e) {
+        catch(/*MaxBookLimitException | BookNotFoundException | BookNotAvailableException |*/ Exception e) {
             System.out.println(e.getMessage());
+        }
+        if (a != currBooks.size()) {
+            System.out.println(name + " borrowed! Due on " + LocalDate.now().plusDays(15).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         }
     }
 
@@ -61,6 +65,7 @@ public class Student extends User {
             System.out.println(name.formatted() + " not currently borrowed by you!");
         }
         else if (a == 1) {
+
             System.out.println(name + " successfully returned!");
         }
     }
