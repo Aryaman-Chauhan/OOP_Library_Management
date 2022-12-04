@@ -8,42 +8,41 @@ public class test {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Scanner sc = new Scanner(System.in);
         Database_DAO dao = new Database_DAO();
-        System.out.println("Enter 1 to sign in as user, 2 to sign in as admin");
-        int a;
-        try{
-            a = Integer.parseInt(sc.nextLine());
-        }catch(Exception e) {
-            System.out.println("Incorrect option entered");
-            return;
-        }
-        System.out.print("Enter user id: ");
-        String user_id = sc.nextLine();
-        System.out.print("Enter password: ");
-        String user_pass = sc.nextLine();
-        if (a == 1) {
-
-            Student s = (Student) dao.signIn(user_id, user_pass);
-            if (s == null) {
-                System.out.println("Incorrect User id or password");
+        while (true) {
+            System.out.println("\n\nEnter 1 to sign in as user, 2 to sign in as admin");
+            int a;
+            try {
+                a = Integer.parseInt(sc.nextLine());
+            } catch (Exception e) {
+                System.out.println("Incorrect option entered");
                 return;
             }
-            else {
-                int y = 1;
-                while(y != 0)
-                    y = displayUserOptions(s);
-            }
-        }
-        else {
+            System.out.print("Enter user id: ");
+            String user_id = sc.nextLine();
+            System.out.print("Enter password: ");
+            String user_pass = sc.nextLine();
+            if (a == 1) {
 
-            Librarian l = (Librarian) Database_DAO.signIn(user_id, user_pass);
-            if (l == null) {
-                System.out.println("Incorrect admin details");
-                return;
-            }
-            else {
-                int y = 1;
-                while (y != 0)
-                    y = displayAdminOptions(l);
+                Student s = (Student) dao.signIn(user_id, user_pass);
+                if (s == null) {
+                    System.out.println("Incorrect User id or password");
+                    return;
+                } else {
+                    int y = 1;
+                    while (y != 0)
+                        y = displayUserOptions(s);
+                }
+            } else {
+
+                Librarian l = (Librarian) Database_DAO.signIn(user_id, user_pass);
+                if (l == null) {
+                    System.out.println("Incorrect admin details");
+                    return;
+                } else {
+                    int y = 1;
+                    while (y != 0)
+                        y = displayAdminOptions(l);
+                }
             }
         }
     }
@@ -56,7 +55,8 @@ public class test {
         System.out.println("3 to view books not borrowed");
         System.out.println("4 to delete book");
         System.out.println("5 to view all students");
-        System.out.println("6 to exit");
+        System.out.println("6 to change fine");
+        System.out.println("7 to sign out");
         int a;
         try{
             a = Integer.parseInt(sc.nextLine());
@@ -123,6 +123,11 @@ public class test {
                 break;
 
             case 6:
+                System.out.print("Enter new fine: ");
+                l.setFine(Integer.parseInt(sc.nextLine()));
+                break;
+
+            case 7:
                 y = 0;
                 break;
 
@@ -143,7 +148,7 @@ public class test {
         System.out.println("4 to return book");
         System.out.println("5 to re-issue book");
         System.out.println("6 to get dues");
-        System.out.println("7 to exit");
+        System.out.println("7 to sign out");
         int a;
         try{
             a = Integer.parseInt(sc.nextLine());
