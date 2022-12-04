@@ -124,7 +124,7 @@ public class test {
 
             case 6:
                 System.out.print("Enter new fine: ");
-                l.setFine(Integer.parseInt(sc.nextLine()));
+                l.setFine(Double.parseDouble(sc.nextLine()));
                 break;
 
             case 7:
