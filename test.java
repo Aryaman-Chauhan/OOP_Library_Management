@@ -9,7 +9,8 @@ public class test {
         Scanner sc = new Scanner(System.in);
         Database_DAO dao = new Database_DAO();
         while (true) {
-            System.out.println("\n\nEnter 1 to sign in as user, 2 to sign in as admin");
+            System.out.println("\n\nEnter 1 to sign in as user, 2 to sign in as admin," +
+                    "\n 3 to register, else to log off");
             int a;
             try {
                 a = Integer.parseInt(sc.nextLine());
@@ -17,6 +18,27 @@ public class test {
                 System.out.println("Incorrect option entered");
                 return;
             }
+            if (a != 1 && a != 2 && a != 3) {
+                System.out.println("Logging off");
+
+            }
+
+            if (a == 3) {
+                String name, id, pass;
+                System.out.print("Enter name: ");
+                name = sc.nextLine();
+                System.out.print("Enter ID: ");
+                id = sc.nextLine();
+                System.out.print("Enter password: ");
+                pass = sc.nextLine();
+                Database_DAO.addStudentToDB(new Student(name, id, pass));
+                Student s = (Student) Database_DAO.signIn(id, pass);
+                int y = 1;
+                while (y != 0)
+                    y = displayUserOptions(s);
+                if (y == 0) continue;
+            }
+
             System.out.print("Enter user id: ");
             String user_id = sc.nextLine();
             System.out.print("Enter password: ");
@@ -147,8 +169,9 @@ public class test {
         System.out.println("3 to view current books");
         System.out.println("4 to return book");
         System.out.println("5 to re-issue book");
-        System.out.println("6 to get dues");
-        System.out.println("7 to sign out");
+        System.out.println("6 to view available books");
+        System.out.println("7 to get dues");
+        System.out.println("8 to sign out");
         int a;
         try{
             a = Integer.parseInt(sc.nextLine());
@@ -232,6 +255,17 @@ public class test {
                 break;
 
             case 6:
+                try {
+                    ResultSet rs = dao.getAvailableBooks();
+                    int i = 0;
+                    while(rs.next()) System.out.println((++i)+":Title: "+rs.getString(1)+"\nAuthor: "+rs.getString(2)+
+                            "\nISBN: "+rs.getString(3)+"\nGenre: "+rs.getString(4)+"\nPublisher"+rs.getString(5)+"\n");
+                } catch(Exception e) {
+                    System.out.println("Couldn't complete operation");
+                }
+                break;
+
+            case 7:
                 try{
                     System.out.println("Dues: " + dao.dueTotal(s));
                 }catch(Exception e) {
@@ -239,7 +273,7 @@ public class test {
                 }
                 break;
 
-            case 7:
+            case 8:
                 y = 0;
                 break;
 
