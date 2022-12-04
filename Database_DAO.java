@@ -48,8 +48,10 @@ public class Database_DAO {
         pst = con.prepareStatement(query);
         pst.setString(1,sid);
         pst.setString(2,pass);
-        return pst.executeQuery();// This ResultSet can be used to extract data like idno, pwd, etc.
+        ResultSet rs = pst.executeQuery();// This ResultSet can be used to extract data like idno, pwd, etc.
         // If null, then wrong info, null can be checked using boolean rs.next()
+        rs.next();
+        return rs;
     }
 
     public ResultSet getUserBooks(int idno) throws SQLException {
@@ -104,15 +106,17 @@ public class Database_DAO {
         }
     }
 
-    public int returnBookDB(int idno, String bookname) throws SQLException {
+    public double returnBookDB(int idno, String bookname) throws SQLException {
+        double dues = this.dueBookDB(idno, bookname);
         String query = "UPDATE book set bookissue=1,duedate=NULL where bname=? AND bookissue=?";
         pst = con.prepareStatement(query);
         pst.setString(1,bookname);
         pst.setInt(2,idno);
         try {
-            return pst.executeUpdate();
+            pst.executeUpdate();
+            return dues;
         }catch (SQLIntegrityConstraintViolationException e){
-            return 0;
+            return 0.;
         }
     }
 
@@ -156,6 +160,26 @@ public class Database_DAO {
                     dues += d * std.fine;
                 }
             }
+        }
+        return dues;
+    }
+
+    public double dueBookDB(int idno, String bookname) throws SQLException {
+        String query = "SELECT duedate FROM book WHERE bname=? AND bookissue=?";
+        double dues = 0.;
+        pst = con.prepareStatement(query);
+        pst.setString(1, bookname);
+        pst.setInt(2, idno);
+        ResultSet rs = pst.executeQuery();
+        rs.next();
+        java.sql.Date sqlDate = rs.getDate(1);
+        LocalDate ld = sqlDate.toLocalDate();
+        LocalDate cd = LocalDate.now();
+        int d = cd.compareTo(ld);
+        if(d>0) {
+            Period period = Period.between(ld, cd);
+            d = period.getDays();
+            dues += d * User.fine;
         }
         return dues;
     }
