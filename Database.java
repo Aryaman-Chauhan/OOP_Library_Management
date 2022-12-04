@@ -26,9 +26,7 @@ class dueChecker implements Runnable {
                 if(!day.equals(currentDay)){
                     break;
                 }
-                d = new Date();
             }
-//            System.out.println("Broken");
             HashSet<Student> hs = Database.getStudentDatabase();
             LocalDate currDate = LocalDate.now();
 
@@ -47,7 +45,7 @@ class dueChecker implements Runnable {
     }
 }
 
-public class Database {
+public class Database implements searchByName{
     private static HashSet<Student> studentDatabase = new HashSet<>();
     private static HashSet<Book> bookList = new HashSet<>();
     private static HashSet<Librarian> adminList = new HashSet<>();
@@ -100,14 +98,14 @@ public class Database {
     public static void issueBook(Student s, String name) throws MaxBookLimitException, BookNotFoundException, BookNotAvailableException{
         Book retBook = null;
 
-        for (Book b : bookList) {
-            if (b.getName().equalsIgnoreCase(name) && b.isAvailable()) {
-                retBook = b;
-                b.setAvailable(false);
-            }
-            else if (b.getName().equalsIgnoreCase(name) && !b.isAvailable()) {
-                throw new BookNotAvailableException(name);
-            }
+        Book b = searchByName.search(name);
+
+        if (b.isAvailable()) {
+            retBook = b;
+            b.setAvailable(false);
+        }
+        else if (!b.isAvailable()){
+            throw new BookNotAvailableException(name);
         }
 
         if (retBook != null) {
@@ -167,23 +165,15 @@ public class Database {
 
     public static int returnBook(Student s, String name) {
         TreeMap<Book, LocalDate> tm = s.getCurrBooks();
-        boolean found = false;
-
-        for (Book b : tm.keySet()) {
-            if (b.getName().equalsIgnoreCase(name)) {
-                found = true;
-            }
-        }
-
-        if (!found) return 0;
 
         for (Book b : tm.keySet()) {
             if (b.getName().equalsIgnoreCase(name)) {
                 tm.remove(b);
                 b.setAvailable(true);
-                break;
+                return 1;
             }
         }
-        return 1;
+
+        return 0;
     }
 }
