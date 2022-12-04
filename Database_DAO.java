@@ -14,12 +14,13 @@ class BookIssuer implements Runnable{
         bookname = name;
         idNo = id;
         Thread t = new Thread(this);
+        t.start();
     }
     @Override
     public void run() {
         ret = issueBook();
     }
-    static int issueBook(){
+    synchronized static int issueBook(){
         try{
             Database_DAO.connect();
             String q = "SELECT COUNT(book.bname) FROM book WHERE bookissue=?";
@@ -158,9 +159,8 @@ public class Database_DAO{
     }
 
     static public int issueBookDB(int idno, String bookname) {
-        Runnable r = new BookIssuer(idno,bookname);
-        r.run();
-        return ((BookIssuer) r).ret;
+        BookIssuer r = new BookIssuer(idno,bookname);
+        return r.ret;
     }
 
     static public HashMap<Double,Double> returnBookDB(int idno, String bookname) throws SQLException, ClassNotFoundException {
