@@ -8,8 +8,9 @@ public class Librarian extends User {
         this.id = "FXXXXXXXXXXXX";
         this.password = "admin";
     }
-    public void setFine(double fine){
-        this.fine = fine;
+    public void setFine(double fine, String pass){
+        if(pass.equals(this.password))
+            User.fine = fine;
     }
     public void addBook(Book b) throws SQLException, ClassNotFoundException {
         Database_DAO dao = new Database_DAO();
@@ -23,7 +24,7 @@ public class Librarian extends User {
         if(a!=0) System.out.println("Book Deleted!");
         else System.out.println("Deletion failed");
     }
-    public void reviewUser() throws SQLException, ClassNotFoundException {
+    public void reviewStudent() throws SQLException, ClassNotFoundException {
         Database_DAO dao = new Database_DAO();
         dao.reviewstudentDB();
     }

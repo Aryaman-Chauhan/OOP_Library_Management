@@ -39,13 +39,13 @@ public class test {
 
 //        Student s = new Student("Radhey K", "F2021A7PS2534P", "rad");
         Database_DAO dao = new Database_DAO();
-        dao.resetDBToLib();
-        Student s = dao.signIn("F2020B5A72006P","12345");
-        s.borrowBook("Oliver Twist");
-        Student t = dao.signIn("F2021A7PS2534P", "12345");
-        t.borrowBook("Oliver Twist");
-        s.returnBook("Oliver Twist");
-        t.borrowBook("Oliver Twist");
+//        dao.resetDBToLib();
+//        Student s = dao.signIn("F2020B5A72006P","12345");
+//        s.borrowBook("Oliver Twist");
+//        Student t = dao.signIn("F2021A7PS2534P", "12345");
+//        t.borrowBook("Oliver Twist");
+//        s.returnBook("Oliver Twist");
+//        t.borrowBook("Oliver Twist");
 
 //        int b = dao.issueBookDB(5, "Oliver Twist");
 //        System.out.println(b);

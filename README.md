@@ -25,3 +25,27 @@ Concepts expected to be incorporated into the project: **Multithreading** (to ha
 Testing will be done using test cases entered through a text file and outputs printed to another text file. Test case format and sample test cases will be uploaded after the 1st phase of submission.
 
 Associated TA (contact via e-mail only): Mithil Shah (f20200980@pilani.bits-pilani.ac.in)
+
+
+## Documentation
+
+The following functionalities have been implemented for Student:
++ Registration/ Sign-In
++ Book Search by:
+  + Title
+  + Author
+  + ISBN
++ Book Issue:
+  + Can issue at maximum 3 books
+  + Will have due date set to 15 days ahead of current date
++ Book Re-Issue: Can't be re-issued again
++ View total dues.
++ Return book:
+  + Will show dues incurred for the returned book
+  + Will add this to the total dues
+
+The following functionalities have been implemented for Librarian:
++ Review all Books
++ Review all students
++ Add/Remove Books
++ Set Fine(Default set to Rs 1.0/day delay)

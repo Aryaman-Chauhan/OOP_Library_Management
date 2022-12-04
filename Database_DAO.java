@@ -138,17 +138,49 @@ public class Database_DAO {
     public HashMap<Double,Double> returnBookDB(int idno, String bookname) throws SQLException, ClassNotFoundException {
         this.connect();
         HashMap<Double,Double> hs = new HashMap<>();
-        double dues = this.dueBookDB(idno, bookname);
+        double due = this.dueBookDB(idno, bookname);
+        double odue = this.getOldDues(idno);
+        odue += due;
+        this.addNewDues(odue, idno);
         String query = "UPDATE book set bookissue=1,duedate=NULL,issueno=0 where bname=? AND bookissue=?";
         pst = con.prepareStatement(query);
         pst.setString(1,bookname);
         pst.setInt(2,idno);
         try {
-            hs.put((double) pst.executeUpdate(),dues);
+            hs.put((double) pst.executeUpdate(),due);
             return hs;
         }catch (SQLIntegrityConstraintViolationException e){
             return null;
         }
+    }
+
+    private double getOldDues(int idno) throws SQLException, ClassNotFoundException {
+        this.connect();
+        String query = "SELECT dues FROM student where idno=?";
+        pst = con.prepareStatement(query);
+        pst.setInt(1,idno);
+        ResultSet rs = pst.executeQuery();
+        rs.next();
+        return rs.getDouble(1);
+    }
+
+    private void addNewDues(double due, int idno) throws SQLException, ClassNotFoundException {
+        this.connect();
+        String query = "UPDATE student SET dues=? WHERE idno=?";
+        pst = con.prepareStatement(query);
+        pst.setDouble(1,due);
+        pst.setInt(2,idno);
+        pst.executeUpdate();
+    }
+
+    private Student getStudentFromId(int idno) throws SQLException, ClassNotFoundException {
+        this.connect();
+        String query = "SELECT sname,sid,pwd FROM student where idno=?";
+        pst = con.prepareStatement(query);
+        pst.setInt(1,idno);
+        ResultSet rs = pst.executeQuery();
+        rs.next();
+        return new Student(rs.getString(1), rs.getString(2), rs.getString(3));
     }
 
     public HashSet<Book> bookDetailsByName(String bookname) throws SQLException, ClassNotFoundException {
@@ -272,6 +304,7 @@ public class Database_DAO {
         pst = con.prepareStatement(query);
         ResultSet rs = pst.executeQuery();
         int i = 0;
+        rs.next();
         while(rs.next()) System.out.println((++i)+":Name: "+rs.getString(1)+"\nID: "+rs.getString(2)+
                 "\nRegistration Date: "+rs.getDate(3)+"\n");
     }
