@@ -234,25 +234,26 @@ public class Database_DAO{
     static public double dueTotal(Student std) throws SQLException, ClassNotFoundException {
         connect();
         int idno = getUserId(std.getID());
-        double dues = 0.;
+        double dues = getUserDues(idno);
         ResultSet rs = getUserBooks(idno);
         if(rs.isBeforeFirst()) {
-            rs.next();
-            idno = rs.getInt(1);
-            ResultSet bookset = getUserBooks(idno);
-            while(bookset.next()){
-                java.sql.Date sqlDate = bookset.getDate(2);
-                LocalDate ld = sqlDate.toLocalDate();
-                LocalDate cd = LocalDate.now();
-                int d = cd.compareTo(ld);
-                if(d>0) {
-                    Period period = Period.between(ld,cd);
-                    d = period.getDays();
-                    dues += d * User.fine;
-                }
+            while (rs.next()){
+                dues += dueBookDB(idno, rs.getString(1));
             }
+
         }
+
         return dues;
+    }
+
+    private static double getUserDues(int idno) throws SQLException, ClassNotFoundException {
+        connect();
+        String query = "SELECT dues FROM student WHERE idno=?";
+        pst = con.prepareStatement(query);
+        pst.setInt(1,idno);
+        ResultSet rs = pst.executeQuery();
+        rs.next();
+        return rs.getDouble(1);
     }
 
     static public double dueBookDB(int idno, String bookname) throws SQLException, ClassNotFoundException {
