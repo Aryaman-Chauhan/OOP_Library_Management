@@ -63,8 +63,13 @@ public class Student extends User {
                 else
                     System.out.println("Cannot return book");
             }
-
-
         }
+    }
+
+    public void reissueBook(String name) throws SQLException, ClassNotFoundException {
+        Database_DAO dao = new Database_DAO();
+        int a = dao.reissueBookDB(name);
+        if(a!=0) System.out.println("Book re-issued successfully");
+        else System.out.println("Can't reissue this book");
     }
 }
