@@ -42,12 +42,12 @@ public class Student extends User {
             return "Name: " + this.getName()+"\nId: "+this.getID()+"\n";
     }
 
-    public void borrowBook(String name) throws SQLException, ClassNotFoundException { //Issues a book to the student
+    public void borrowBook(String name) throws SQLException, ClassNotFoundException, InterruptedException { //Issues a book to the student
         Database_DAO dao = new Database_DAO();
         int idno = dao.getUserId(this.getID());
         int a = dao.issueBookDB(idno, name);
         if(a==-1) System.out.println("Max Limit Reached");
-        else if(a!=0) System.out.println("Book Issued");
+        else if(a==1) System.out.println("Book Issued");
         else System.out.println("Issue failed");
     }
 
@@ -63,7 +63,7 @@ public class Student extends User {
             }
         }
     }
-    public void reissueBook(String name) throws SQLException, ClassNotFoundException {
+    public void reissueBook(String name) throws SQLException, ClassNotFoundException, InterruptedException {
             Database_DAO dao = new Database_DAO();
             int a = dao.reissueBookDB(name);
             if(a!=0) System.out.println("Book re-issued successfully");

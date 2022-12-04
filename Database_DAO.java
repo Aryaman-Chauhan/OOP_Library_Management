@@ -110,13 +110,15 @@ public class Database_DAO{
         }
     }
 
-    static public int issueBookDB(int idno, String bookname) {
+    static public int issueBookDB(int idno, String bookname) throws InterruptedException {
         BookIssuer r = new BookIssuer(idno,bookname);
+        Thread.sleep(100);
         return r.ret;
     }
 
-    public int reissueBookDB(String name) {
+    public int reissueBookDB(String name) throws InterruptedException {
         ReissuerBook r = new ReissuerBook(name);
+        Thread.sleep(100);
         return r.ret;
     }
     static public HashMap<Double,Double> returnBookDB(int idno, String bookname) throws SQLException, ClassNotFoundException {
