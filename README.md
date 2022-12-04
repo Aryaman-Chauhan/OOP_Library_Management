@@ -59,7 +59,7 @@ There are two classes generated which implement the Runnable interface
 and override the run() method - BookIssuer and ReissuerBook.
 
 These 2 classes each have a synchronized function - issueBook() in BookIssuer and 
-reissuerBook() in ReissuerBook().
+reissuerBook() in ReissuerBook.
 
 The reason why they are synchronized is that if two students are trying to access the same book
 at the same time, then error would get generated. So we want to only one thread to access the function
