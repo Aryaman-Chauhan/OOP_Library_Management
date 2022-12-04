@@ -77,13 +77,7 @@ public class Database implements searchByName{
     }
 
     public static void removeBook(String name) {
-        Book r = null;
-
-        for (Book b : bookList) {
-            if (b.getName().equals(name)) {
-                r = b;
-            }
-        }
+        Book r = searchByName.search(name);
 
         if (r == null) {
             System.out.println("Book not present in Library!");
@@ -100,7 +94,11 @@ public class Database implements searchByName{
 
         Book b = searchByName.search(name);
 
-        if (b.isAvailable()) {
+        if (b == null) {
+            throw new BookNotFoundException(name);
+        }
+
+        else if (b.isAvailable()) {
             retBook = b;
             b.setAvailable(false);
         }
@@ -114,8 +112,7 @@ public class Database implements searchByName{
                 tm = new TreeMap<>();
             }
 
-            if (tm.size() > 3) {
-                //return 3;
+            if (tm.size() >= 3) {
                 throw new MaxBookLimitException();
             }
 
@@ -124,43 +121,30 @@ public class Database implements searchByName{
                 s.setCurrBooks(tm);
             }
         }
-        else {
-            throw new BookNotFoundException(name);
-        }
     }
 
     public static void changeBookName(Librarian admin, String bookName, String newName) throws BookNotFoundException{
-        Book retBook = null;
-
-        for (Book b : bookList) {
-            if (b.getName().equalsIgnoreCase(bookName)) {
-                retBook = b;
-                break;
-            }
-        }
+        Book retBook = searchByName.search(bookName);
 
         if(retBook==null){
             throw new BookNotFoundException(bookName);
         }
 
-        retBook.setName(newName);
+        else{
+            retBook.setName(newName);
+        }
     }
 
     public static void changeBookAuthor(Librarian admin, String bookName, String newName) throws BookNotFoundException{
-        Book retBook = null;
-
-        for (Book b : bookList) {
-            if (b.getName().equalsIgnoreCase(bookName)) {
-                retBook = b;
-                break;
-            }
-        }
+        Book retBook = searchByName.search(bookName);
 
         if(retBook==null){
             throw new BookNotFoundException(bookName);
         }
 
-        retBook.setAuthor(newName);
+        else {
+            retBook.setAuthor(newName);
+        }
     }
 
     public static int returnBook(Student s, String name) {
