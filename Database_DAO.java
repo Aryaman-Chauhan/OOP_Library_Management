@@ -23,7 +23,7 @@ class BookIssuer implements Runnable{
     synchronized static int issueBook(){
         try{
             Database_DAO.connect();
-            String q = "SELECT COUNT(book.bname) FROM book WHERE bookissue=?";
+            String q = "SELECT COUNT(book.bname) FROM book WHERE bookissue=? AND issueno=0";
             PreparedStatement qst = Database_DAO.con.prepareStatement(q);
             qst.setInt(1, idNo);
             ResultSet rs1 = qst.executeQuery();
@@ -69,7 +69,7 @@ public class Database_DAO{
 
     static public void resetDBToLib() throws SQLException, ClassNotFoundException {
         connect();
-        String query = "UPDATE book SET bookissue=1,duedate=NULL";
+        String query = "UPDATE book SET bookissue=1,duedate=NULL,issueno=0";
         pst = con.prepareStatement(query);
         pst.executeUpdate();//To reset Books at the initial stage of implementation
     }
@@ -104,12 +104,10 @@ public class Database_DAO{
 
     static public Student signIn(String id, String password) throws SQLException, ClassNotFoundException {
         connect();
-        String sid = id;
-        String pass = password;
         String query = "SELECT sname,sid,pwd FROM student WHERE sid=? and pwd=?";
         pst = con.prepareStatement(query);
-        pst.setString(1,sid);
-        pst.setString(2,pass);
+        pst.setString(1, id);
+        pst.setString(2, password);
         ResultSet rs = pst.executeQuery();// This ResultSet can be used to extract data like idno, pwd, etc.
         // If null, then wrong info, null can be checked using boolean rs.next()
         if(rs.next()) return new Student(rs.getString(1),rs.getString(2),rs.getString(3));
@@ -163,11 +161,21 @@ public class Database_DAO{
         return r.ret;
     }
 
+    public int reissueBookDB(String name) throws SQLException, ClassNotFoundException {
+        connect();
+        String query = "UPDATE book SET issueno=2,duedate=adddate(current_date(),15) WHERE bname=? AND issueno=1";
+        pst = con.prepareStatement(query);
+        pst.setString(1,name);
+        return pst.executeUpdate();
+    }
     static public HashMap<Double,Double> returnBookDB(int idno, String bookname) throws SQLException, ClassNotFoundException {
         connect();
         HashMap<Double,Double> hs = new HashMap<>();
         double dues = dueBookDB(idno, bookname);
-        String query = "UPDATE book set bookissue=1,duedate=NULL where bname=? AND bookissue=?";
+        double odue = getOldDues(idno);
+        odue += dues;
+        addNewDues(odue, idno);
+        String query = "UPDATE book set bookissue=1,duedate=NULL,issueno=0 where bname=? AND bookissue=?";
         pst = con.prepareStatement(query);
         pst.setString(1,bookname);
         pst.setInt(2,idno);
@@ -179,6 +187,34 @@ public class Database_DAO{
         }
     }
 
+    private static void addNewDues(double odue, int idno) throws SQLException, ClassNotFoundException {
+        connect();
+        String query = "UPDATE student SET dues=? WHERE idno=?";
+        pst = con.prepareStatement(query);
+        pst.setDouble(1,odue);
+        pst.setInt(2,idno);
+        pst.executeUpdate();
+    }
+
+    private static double getOldDues(int idno) throws SQLException, ClassNotFoundException {
+        connect();
+        String query = "SELECT dues FROM student where idno=?";
+        pst = con.prepareStatement(query);
+        pst.setInt(1,idno);
+        ResultSet rs = pst.executeQuery();
+        rs.next();
+        return rs.getDouble(1);
+    }
+
+    public static Student getStudentFromId(int idno) throws SQLException, ClassNotFoundException {
+        connect();
+        String query = "SELECT sname,sid,pwd FROM student where idno=?";
+        pst = con.prepareStatement(query);
+        pst.setInt(1,idno);
+        ResultSet rs = pst.executeQuery();
+        rs.next();
+        return new Student(rs.getString(1), rs.getString(2), rs.getString(3));
+    }
     static public HashSet<Book> bookDetailsByName(String bookname) throws SQLException, ClassNotFoundException {
         ResultSet rs = getAvailableBooks();
         HashSet<Book> hbs = new HashSet<>();
@@ -234,7 +270,7 @@ public class Database_DAO{
     static public double dueTotal(Student std) throws SQLException, ClassNotFoundException {
         connect();
         int idno = getUserId(std.getID());
-        double dues = getUserDues(idno);
+        double dues = getOldDues(idno);
         ResultSet rs = getUserBooks(idno);
         if(rs.isBeforeFirst()) {
             while (rs.next()){
@@ -242,18 +278,8 @@ public class Database_DAO{
             }
 
         }
-
+        addNewDues(dues,idno);
         return dues;
-    }
-
-    private static double getUserDues(int idno) throws SQLException, ClassNotFoundException {
-        connect();
-        String query = "SELECT dues FROM student WHERE idno=?";
-        pst = con.prepareStatement(query);
-        pst.setInt(1,idno);
-        ResultSet rs = pst.executeQuery();
-        rs.next();
-        return rs.getDouble(1);
     }
 
     static public double dueBookDB(int idno, String bookname) throws SQLException, ClassNotFoundException {
@@ -301,6 +327,7 @@ public class Database_DAO{
         pst = con.prepareStatement(query);
         ResultSet rs = pst.executeQuery();
         int i = 0;
+        rs.next();
         while(rs.next()) System.out.println((++i)+":Name: "+rs.getString(1)+"\nID: "+rs.getString(2)+
                 "\nRegistration Date: "+rs.getDate(3)+"\n");
     }

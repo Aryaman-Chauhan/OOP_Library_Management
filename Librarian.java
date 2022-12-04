@@ -8,8 +8,9 @@ public class Librarian extends User {
         this.id = "FXXXXXXXXXXXX";
         this.password = "admin";
     }
-    public void setFine(double fine){ //Sets the fine value
-        this.fine = fine;
+    public void setFine(double fine,String pass){ //Sets the fine value
+        if(pass.equals(this.password))
+            User.fine = fine;
     }
     public void addBook(Book b) throws SQLException, ClassNotFoundException { //Adds a book B to the SQL database 
         Database_DAO dao = new Database_DAO();
