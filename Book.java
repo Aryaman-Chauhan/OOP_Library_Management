@@ -74,6 +74,7 @@ public class Book implements Comparable<Book>{
     }
 
     public String toString() {
-        return "Name: " + this.getName() + "\nAuthor: " + this.getAuthor() + "\nAvailable for borrow: " + this.available;
+        return "\nName: " + this.getName() + "\nAuthor: " + this.getAuthor() + "\nISBN: "+ this.getIsbn()+"\nGenre: "+ this.genre
+                +"\nPublisher: "+this.getPublisher()+"\n";
     }
 }

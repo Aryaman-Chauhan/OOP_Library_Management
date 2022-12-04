@@ -1,16 +1,9 @@
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 
 public interface searchByName {
-    static Book search(String name) {
-        Book retBook = null;
-        HashSet<Book> bookList = Database.getBookList();
-        for (Book b : bookList) {
-            if (b.getName().equalsIgnoreCase(name)) {
-                retBook = b;
-                break;
-            }
-        }
-
-        return retBook;
+    static HashSet<Book> search(String name, Database_DAO dao) throws SQLException, ClassNotFoundException {
+        return dao.bookDetailsByName(name);
     }
 }

@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.time.LocalDate;
@@ -6,7 +7,6 @@ public class Student extends User {
     private String name;
     private TreeMap<Book, LocalDate> currBooks;
     private double dues;
-
     Student(String name, String id, String password) {
         this.name = name;
         this.id = id;
@@ -44,29 +44,27 @@ public class Student extends User {
         return "Name: " + name;
     }
 
-    public void borrowBook(String name){
-        int a = currBooks.size();
-
-        try{
-            Database.issueBook(this, name);
-        }
-        catch(/*MaxBookLimitException | BookNotFoundException | BookNotAvailableException |*/ Exception e) {
-            System.out.println(e.getMessage());
-        }
-        if (a != currBooks.size()) {
-            System.out.println(name + " borrowed! Due on " + LocalDate.now().plusDays(15).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        }
+    public void borrowBook(String name) throws SQLException, ClassNotFoundException {
+        Database_DAO dao = new Database_DAO();
+        int idno = dao.getUserId(this.getID());
+        int a = dao.issueBookDB(idno, name);
+        if(a!=0) System.out.println("Book Issued");
+        else System.out.println("Issue failed");
     }
 
-    public void returnBook(String name) {
-        int a = Database.returnBook(this, name);
+    public void returnBook(String name) throws SQLException, ClassNotFoundException {
+        int idno = new Database_DAO().getUserId(this.getID());
+        if(idno!=0) {
+            HashMap<Double,Double> hs = new Database_DAO().returnBookDB(idno, name);
+            for(Double d: hs.keySet()){
+                if(d!=0){
+                    System.out.println("Dues: "+hs.get(d));
+                }
+                else
+                    System.out.println("Cannot return book");
+            }
 
-        if (a == 0) {
-            System.out.println(name.formatted() + " not currently borrowed by you!");
-        }
-        else if (a == 1) {
 
-            System.out.println(name + " successfully returned!");
         }
     }
 }
