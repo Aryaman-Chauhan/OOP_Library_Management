@@ -3,35 +3,15 @@ import java.util.*;
 
 public class Student extends User {
     private String name;
-//    private TreeMap<Book, LocalDate> currBooks;
-//    private double dues;
-    Student(String name, String id, String password) { //Constructor for Student which takes 3 arguments and initializes the parameters
+Student(String name, String id, String password) { //Constructor for Student which takes 3 arguments and initializes the parameters
         this.name = name;
         this.id = id;
         super.setPassword(password);
-//        currBooks = new TreeMap<>();
-//        dues = 0;
     }
-
-//    public double getDues() { //Gets the dues owed by the student
-//        return dues;
-//    }
 
     public String getName() { //Gets the name of the student
         return name;
     }
-
-//    public TreeMap<Book, LocalDate> getCurrBooks() { //Gets a treemap having books borrowed by the student
-//        return currBooks;
-//    }
-
-//    public void setCurrBooks(TreeMap<Book, LocalDate> currBooks) { //Sets the treemap having books borrowed by the student
-//        this.currBooks = currBooks;
-//    }
-
-//    public void setDues(double dues) { //Sets the dues owed by the student
-//        this.dues = dues;
-//    }
 
     public void setName(String name) { //Sets the name of the student
         this.name = name;

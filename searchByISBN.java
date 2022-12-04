@@ -1,6 +1,5 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 
 public interface searchByISBN { //Searches for a book by it's isbn code
     static Book search(String isbn, Database_DAO dao) throws SQLException, ClassNotFoundException {

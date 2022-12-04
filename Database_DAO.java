@@ -3,9 +3,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.HashMap;
 import java.util.HashSet;
+
 public class Database_DAO{
-
-
     static Connection con = null;
     static PreparedStatement pst = null;
 

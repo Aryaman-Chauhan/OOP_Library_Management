@@ -1,6 +1,4 @@
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 
 public class Librarian extends User {
 

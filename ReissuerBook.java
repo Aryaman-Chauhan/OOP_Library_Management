@@ -1,10 +1,7 @@
 import java.time.LocalDate;
-import java.time.Period;
 
 public class ReissuerBook implements Runnable{
     static String name;
-
-
     public static int ret;
 
     public ReissuerBook(String tname){
