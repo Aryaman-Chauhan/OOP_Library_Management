@@ -1,16 +1,15 @@
 import java.sql.SQLException;
 import java.util.*;
-import java.time.LocalDate;
 
 public class Student extends User {
     private String name;
-    private TreeMap<Book, LocalDate> currBooks;
+//    private TreeMap<Book, LocalDate> currBooks;
 //    private double dues;
     Student(String name, String id, String password) { //Constructor for Student which takes 3 arguments and initializes the parameters
         this.name = name;
         this.id = id;
         super.setPassword(password);
-        currBooks = new TreeMap<>();
+//        currBooks = new TreeMap<>();
 //        dues = 0;
     }
 
@@ -22,13 +21,13 @@ public class Student extends User {
         return name;
     }
 
-    public TreeMap<Book, LocalDate> getCurrBooks() { //Gets a treemap having books borrowed by the student
-        return currBooks;
-    }
+//    public TreeMap<Book, LocalDate> getCurrBooks() { //Gets a treemap having books borrowed by the student
+//        return currBooks;
+//    }
 
-    public void setCurrBooks(TreeMap<Book, LocalDate> currBooks) { //Sets the treemap having books borrowed by the student
-        this.currBooks = currBooks;
-    }
+//    public void setCurrBooks(TreeMap<Book, LocalDate> currBooks) { //Sets the treemap having books borrowed by the student
+//        this.currBooks = currBooks;
+//    }
 
 //    public void setDues(double dues) { //Sets the dues owed by the student
 //        this.dues = dues;
@@ -49,7 +48,6 @@ public class Student extends User {
         int a = dao.issueBookDB(idno, name);
         if(a==-1) System.out.println("Max Limit Reached");
         else if(a!=0) System.out.println("Book Issued");
-
         else System.out.println("Issue failed");
     }
 
