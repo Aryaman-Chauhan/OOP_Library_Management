@@ -121,8 +121,10 @@ public class Database {
                 throw new MaxBookLimitException();
             }
 
-            tm.put(retBook, LocalDate.now().plusDays(15));
-            s.setCurrBooks(tm);
+            else {
+                tm.put(retBook, LocalDate.now().plusDays(15));
+                s.setCurrBooks(tm);
+            }
         }
         else {
             throw new BookNotFoundException(name);
