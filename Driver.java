@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class test {
+public class Driver {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Scanner sc = new Scanner(System.in);
         Database_DAO dao = new Database_DAO();
@@ -20,7 +20,8 @@ public class test {
             }
             if (a != 1 && a != 2 && a != 3) {
                 System.out.println("Logging off");
-
+                dao.closeCon();
+                return;
             }
 
             if (a == 3) {
@@ -54,7 +55,7 @@ public class test {
                     while (y != 0)
                         y = displayUserOptions(s);
                 }
-            } else {
+            } else if (a == 2){
 
                 Librarian l = (Librarian) Database_DAO.signIn(user_id, user_pass);
                 if (l == null) {
@@ -179,7 +180,7 @@ public class test {
             a = 0;
         }
         int y = 1;
-        
+
         switch (a) {
             case 1:
                 System.out.println("1 to search by name\n2 to search by ISBN\n3 to search by author");
@@ -216,7 +217,7 @@ public class test {
             case 2:
                 System.out.print("Enter book name: ");
                 try {
-                s.borrowBook(sc.nextLine());
+                    s.borrowBook(sc.nextLine());
                 }catch(Exception e) {
                     System.out.println(e.getMessage());
                 }
@@ -227,9 +228,9 @@ public class test {
                     int id = dao.getUserId(s.getID());
                     ResultSet rs = dao.getUserBooks(id);
                     if(rs.isBeforeFirst()){
-                    while(rs.next()) {
-                        System.out.println("\nName: " + rs.getString(1) + "\nDue Date: " + rs.getDate(2));
-                    }}
+                        while(rs.next()) {
+                            System.out.println("\nName: " + rs.getString(1) + "\nDue Date: " + rs.getDate(2));
+                        }}
                     else System.out.println("No books borrowed");
                 } catch (Exception e) {
                     System.out.println(e.getMessage());

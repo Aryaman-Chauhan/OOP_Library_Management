@@ -116,10 +116,20 @@ public class Database_DAO{
         return r.ret;
     }
 
-    public int reissueBookDB(String name) throws InterruptedException {
+    static public int reissueBookDB(String name) throws InterruptedException {
         ReissuerBook r = new ReissuerBook(name);
         Thread.sleep(100);
         return r.ret;
+    }
+
+    static public Date getBookDueDate(String name) throws SQLException, ClassNotFoundException {
+        connect();
+        String query = "SELECT duedate FROM book WHERE bname=?";
+        pst = con.prepareStatement(query);
+        pst.setString(1,name);
+        ResultSet rs = pst.executeQuery();
+        rs.next();
+        return rs.getDate(1);
     }
     static public HashMap<Double,Double> returnBookDB(int idno, String bookname) throws SQLException, ClassNotFoundException {
         connect();
@@ -256,8 +266,8 @@ public class Database_DAO{
         return dues;
     }
     public void closeCon() throws SQLException {
-        con.close();
         try {
+            con.close();
             pst.close();
         }catch (NullPointerException ignored){  }
     }
@@ -296,35 +306,3 @@ public class Database_DAO{
     }
 
 }
-//class Test{
-//    public static void main(String[] args) throws Exception {
-//        Database_DAO dao = new Database_DAO();
-//        dao.connect();
-////        Student std = new Student("aryaman","FYYY","12345");//Add student completed
-////                                                            // with all possible case checks
-////        System.out.println(dao.addStudentToDB(std));
-////        System.out.println(dao.deleteStudentFromDB("FYYY"));//Deletion working passed
-////        System.out.println(dao.issueBook(3,"Mein Kamf"));//Issue working perfectly
-////        ResultSet rs = dao.getUserBooks(3);
-////        int i = 1;
-////        while(rs.next()){
-////            System.out.println(i+":"+rs.getString(1));
-////            System.out.println("Due Date:"+rs.getDate(2));
-////            i++;
-////        }
-////        System.out.println(rs.isAfterLast());//If this is true, then we had a successful list,
-////                                            // else no books due
-////        Book book = new Book("Hey","test","aloo","","");//Book addition test passed
-////        System.out.println(dao.addBook(book));
-////        System.out.println(dao.deleteBook("aloo"));//Book deletion test passed
-////        System.out.println(dao.returnBook(3,"Mein Kampf"));//Return book class passed
-////        ResultSet rs = dao.bookDetails("Mein Kampf");//Get details working passed
-////        System.out.println(rs.isBeforeFirst());//Important to differentiate b/w empty and full ResulSet
-////        rs.next();
-////        System.out.println("Name: "+rs.getString(1)+"\nAuthor: "+rs.getString(2)+"\nISBN: "+rs.getString(3)+"\nGenre: "+
-////        rs.getString(4)+"\nPublisher: "+rs.getString(5)+" ");
-////        System.out.println(dao.dueTotal(new Student("Aryaman Chauhan","F2020B5A72006P","12345")));//Due calculation passed
-////        dao.returnBookDB(3,"Digital Design");
-//        dao.closeCon();
-//    }
-//}

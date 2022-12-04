@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.Period;
+
 public class ReissuerBook implements Runnable{
     static String name;
 
@@ -16,10 +19,16 @@ public class ReissuerBook implements Runnable{
     synchronized static void reissueBook(){
         try{
             Database_DAO.connect();
-            String query = "UPDATE book SET issueno=2,duedate=adddate(current_date(),15) WHERE bname=? AND issueno=1";
-            Database_DAO.pst = Database_DAO.con.prepareStatement(query);
-            Database_DAO.pst.setString(1,name);
-            ret = Database_DAO.pst.executeUpdate();
+            java.sql.Date sqlDate = Database_DAO.getBookDueDate(name);
+            LocalDate ld = sqlDate.toLocalDate();
+            LocalDate cd = LocalDate.now();
+            if(cd.isBefore(ld)) {
+                String query = "UPDATE book SET issueno=2,duedate=adddate(current_date(),15) WHERE bname=? AND issueno=1";
+                Database_DAO.pst = Database_DAO.con.prepareStatement(query);
+                Database_DAO.pst.setString(1, name);
+                ret = Database_DAO.pst.executeUpdate();
+            }
+            else ret = 0;
         }
         catch(Exception e){
             System.out.println(e.getMessage());
