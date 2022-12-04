@@ -102,16 +102,20 @@ public class Database_DAO{
         }
     }
 
-    static public Student signIn(String id, String password) throws SQLException, ClassNotFoundException {
+    static public User signIn(String id, String password) throws SQLException, ClassNotFoundException {
         connect();
         String query = "SELECT sname,sid,pwd FROM student WHERE sid=? and pwd=?";
         pst = con.prepareStatement(query);
-        pst.setString(1, id);
+        pst.setString(1, id.toUpperCase());
         pst.setString(2, password);
         ResultSet rs = pst.executeQuery();// This ResultSet can be used to extract data like idno, pwd, etc.
         // If null, then wrong info, null can be checked using boolean rs.next()
-        if(rs.next()) return new Student(rs.getString(1),rs.getString(2),rs.getString(3));
+        if(!(id.equalsIgnoreCase("ADMIN"))) {
+            if (rs.next()) return new Student(rs.getString(1), rs.getString(2), rs.getString(3));
+            return null;
+        }else if(rs.next()) return new Librarian();
         return null;
+
     }
 
     static public ResultSet getUserBooks(int idno) throws SQLException, ClassNotFoundException {

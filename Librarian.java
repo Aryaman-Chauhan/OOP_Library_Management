@@ -5,7 +5,7 @@ import java.util.HashSet;
 public class Librarian extends User {
 
     Librarian() { //Constructor for Librarian initializing parameters if no argument is passed
-        this.id = "FXXXXXXXXXXXX";
+        this.id = "ADMIN";
         this.password = "admin";
     }
     public void setFine(double fine,String pass){ //Sets the fine value

@@ -47,7 +47,9 @@ public class Student extends User {
         Database_DAO dao = new Database_DAO();
         int idno = dao.getUserId(this.getID());
         int a = dao.issueBookDB(idno, name);
-        if(a!=0) System.out.println("Book Issued");
+        if(a==-1) System.out.println("Max Limit Reached");
+        else if(a!=0) System.out.println("Book Issued");
+
         else System.out.println("Issue failed");
     }
 
