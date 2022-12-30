@@ -39,7 +39,7 @@ class dueChecker implements Runnable {
                     LocalDate ch = tm.get(b);
                     if (currDate.isAfter(ch)) {
                         System.out.println("Student " + s.getName() + "'s borrowed book " + b.getName() + "is currently due! Book was due on " + tm.get(b).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "!");
-                        s.setDues(s.getDues() + 10);
+                        s.setDues(s.getDues() + 1);
                     }
                 }
             }
@@ -181,31 +181,5 @@ public class Database {
             }
         }
         return 1;
-    }
-
-    public static void main(String[] args) {
-        //Testing
-        dueChecker dc = new dueChecker();
-        Student s = new Student("rad", "rad", "rad");
-        addStudent(s);
-        System.out.println();
-
-        addBook(new Book("Atomic Habits", "James Clear"));
-        System.out.println();
-        addBook(new Book("Ikigai", "Hector Garcia"));
-        System.out.println();
-        addBook(new Book("War of Lanka", "Amish Tripathi"));
-        System.out.println();
-
-        System.out.println(bookList);
-
-        s.borrowBook("war of lanka");
-        s.borrowBook("atomic habits");
-        System.out.println();
-        System.out.println(s.getCurrBooks());
-        System.out.println(bookList);
-        s.returnBook("atomic habits");
-        System.out.println(s.getCurrBooks());
-        System.out.println(bookList);
     }
 }
